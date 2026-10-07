@@ -20,7 +20,10 @@ export default function RoomHistoryPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white py-12 px-4">
       <div className="max-w-2xl mx-auto space-y-6">
-        <h1 className="text-2xl font-bold text-center">📽️ What We Watched</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">📽️ What We Watched</h1>
+          <Link to="/" className="text-sm text-gray-400 hover:text-white transition">🏠 Home</Link>
+        </div>
 
         {rooms.length === 0 && (
           <p className="text-center text-gray-400">No completed rooms yet.</p>

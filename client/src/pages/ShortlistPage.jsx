@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getRoom } from '../services/roomService';
 
 export default function ShortlistPage() {
@@ -18,7 +18,10 @@ export default function ShortlistPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white py-12 px-4">
       <div className="max-w-2xl mx-auto space-y-6">
-        <h1 className="text-2xl font-bold text-center">🏆 Shortlist</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">🏆 Shortlist</h1>
+          <Link to="/" className="text-sm text-gray-400 hover:text-white transition">🏠 Home</Link>
+        </div>
 
         {room.relaxedConstraints?.length > 0 && (
           <p className="text-yellow-400 text-sm text-center">
@@ -54,6 +57,13 @@ export default function ShortlistPage() {
         {room.shortlist.length === 0 && (
           <p className="text-center text-gray-400">No movies matched the group's preferences.</p>
         )}
+
+        <Link
+          to={`/rooms/${code}/reveal`}
+          className="block text-center text-sm text-gray-400 hover:text-white transition pt-2"
+        >
+          ← Back to Reveal
+        </Link>
       </div>
     </div>
   );

@@ -108,9 +108,18 @@ export default function PreferencesPage() {
 
         {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
-        <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 rounded-lg py-2 font-semibold transition">
-          Save Preferences
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => navigate(`/rooms/${code}`)}
+            className="flex-1 bg-gray-700 hover:bg-gray-600 rounded-lg py-2 font-medium transition"
+          >
+            Cancel
+          </button>
+          <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-500 rounded-lg py-2 font-semibold transition">
+            Save Preferences
+          </button>
+        </div>
       </form>
     </div>
   );

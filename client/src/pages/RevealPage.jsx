@@ -161,9 +161,16 @@ export default function RevealPage() {
 
           <Link
             to="/rooms/history"
-            className="inline-block mt-4 text-sm text-gray-400 hover:text-white transition"
+            className="block text-sm text-gray-400 hover:text-white transition"
           >
             View room history →
+          </Link>
+
+          <Link
+            to="/"
+            className="inline-block mt-2 w-full bg-indigo-600 hover:bg-indigo-500 rounded-xl py-3 font-bold text-base transition text-center"
+          >
+            🏠 Back to Home
           </Link>
         </div>
       )}

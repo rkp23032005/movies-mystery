@@ -115,6 +115,12 @@ export default function LobbyPage() {
               Start Voting →
             </button>
           )}
+          <button
+            onClick={() => navigate('/')}
+            className="w-full bg-gray-800 hover:bg-gray-700 rounded-lg py-2 text-sm text-gray-400 hover:text-white transition"
+          >
+            ← Leave Room
+          </button>
         </div>
       </div>
     </div>

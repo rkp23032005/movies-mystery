@@ -62,6 +62,12 @@ export default function VotingPage() {
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold">🗳️ Vote</h1>
           <p className="text-gray-400 text-sm mt-1">{totalVotes} vote{totalVotes !== 1 ? 's' : ''} cast</p>
+          <button
+            onClick={() => navigate('/')}
+            className="mt-2 text-xs text-gray-500 hover:text-white transition"
+          >
+            ← Leave to Home
+          </button>
         </div>
 
         {room.relaxedConstraints?.length > 0 && (
