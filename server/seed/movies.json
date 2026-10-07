@@ -1,0 +1,572 @@
+[
+  {
+    "tmdbId": 550,
+    "title": "Fight Club",
+    "overview": "A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy.",
+    "genres": ["Drama", "Thriller", "Comedy"],
+    "language": "en",
+    "runtime": 139,
+    "releaseYear": 1999,
+    "rating": 8.4,
+    "popularity": 73.4,
+    "posterPath": "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+    "backdropPath": "/rr7E0NoGKxvbkb89eR1GwfoYjpA.jpg",
+    "cast": ["Brad Pitt", "Edward Norton", "Helena Bonham Carter", "Meat Loaf", "Zach Grenier"],
+    "trailerKey": "SUXWAEX2jlg",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 278,
+    "title": "The Shawshank Redemption",
+    "overview": "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank State Penitentiary.",
+    "genres": ["Drama", "Crime"],
+    "language": "en",
+    "runtime": 142,
+    "releaseYear": 1994,
+    "rating": 8.7,
+    "popularity": 104.3,
+    "posterPath": "/lyQBXzOQSuE59IsHyhrp0qIiPAz.jpg",
+    "backdropPath": "/kXfqcdQKsToO0OUXHcrrNCHDBzO.jpg",
+    "cast": ["Tim Robbins", "Morgan Freeman", "Bob Gunton", "William Sadler", "Clancy Brown"],
+    "trailerKey": "6hB3S9bIaco",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Netflix", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 238,
+    "title": "The Godfather",
+    "overview": "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family.",
+    "genres": ["Drama", "Crime"],
+    "language": "en",
+    "runtime": 175,
+    "releaseYear": 1972,
+    "rating": 8.7,
+    "popularity": 122.5,
+    "posterPath": "/3bhkrj58Vtu7enYsLegHnDmni1O.jpg",
+    "backdropPath": "/tmU7GeKVybMWFButWEGl2M4GeiP.jpg",
+    "cast": ["Marlon Brando", "Al Pacino", "James Caan", "Robert Duvall", "Diane Keaton"],
+    "trailerKey": "sY1S34973zA",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Paramount Plus", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 424,
+    "title": "Schindler's List",
+    "overview": "The true story of how businessman Oskar Schindler saved over a thousand Jewish lives from the Nazis while they worked as slaves in his factories.",
+    "genres": ["Drama", "History", "War"],
+    "language": "en",
+    "runtime": 195,
+    "releaseYear": 1993,
+    "rating": 8.6,
+    "popularity": 64.1,
+    "posterPath": "/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+    "backdropPath": "/loRmRzQXZeqG78TqZuyvSlEQfZb.jpg",
+    "cast": ["Liam Neeson", "Ben Kingsley", "Ralph Fiennes", "Caroline Goodall", "Jonathan Sagall"],
+    "trailerKey": "gG22XNhtnoY",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Peacock", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 155,
+    "title": "The Dark Knight",
+    "overview": "Batman raises the stakes in his war on crime. With the help of Lt. Jim Gordon and District Attorney Harvey Dent, Batman sets out to dismantle the remaining criminal organizations.",
+    "genres": ["Drama", "Action", "Crime", "Thriller"],
+    "language": "en",
+    "runtime": 152,
+    "releaseYear": 2008,
+    "rating": 8.5,
+    "popularity": 132.8,
+    "posterPath": "/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    "backdropPath": "/hqkIcbrOHL86UncnHIsHVcVmzue.jpg",
+    "cast": ["Christian Bale", "Heath Ledger", "Aaron Eckhart", "Michael Caine", "Maggie Gyllenhaal"],
+    "trailerKey": "EXeTwQWrcwY",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }, { "name": "Hotstar", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 13,
+    "title": "Forrest Gump",
+    "overview": "A man with a low IQ has accomplished great things in his life and been present during significant historical events.",
+    "genres": ["Comedy", "Drama", "Romance"],
+    "language": "en",
+    "runtime": 142,
+    "releaseYear": 1994,
+    "rating": 8.5,
+    "popularity": 88.4,
+    "posterPath": "/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
+    "backdropPath": "/3h1JZGDhZ8nzxdgvkxha0qBqi05.jpg",
+    "cast": ["Tom Hanks", "Robin Wright", "Gary Sinise", "Sally Field", "Mykelti Williamson"],
+    "trailerKey": "bLvqoHBptjg",
+    "providers": {
+      "IN": [{ "name": "Hotstar", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }],
+      "US": [{ "name": "Paramount Plus", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 680,
+    "title": "Pulp Fiction",
+    "overview": "A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper.",
+    "genres": ["Thriller", "Crime"],
+    "language": "en",
+    "runtime": 154,
+    "releaseYear": 1994,
+    "rating": 8.5,
+    "popularity": 97.2,
+    "posterPath": "/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+    "backdropPath": "/suaEOtk1N1sgg2MTM7oZd2cfVp3.jpg",
+    "cast": ["John Travolta", "Samuel L. Jackson", "Uma Thurman", "Harvey Keitel", "Tim Roth"],
+    "trailerKey": "s7EdQ4FqbhY",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 389,
+    "title": "12 Angry Men",
+    "overview": "The defense and the prosecution have rested and the jury is filing into the jury room to decide if a young man is guilty or innocent of murdering his father.",
+    "genres": ["Drama"],
+    "language": "en",
+    "runtime": 96,
+    "releaseYear": 1957,
+    "rating": 8.5,
+    "popularity": 39.6,
+    "posterPath": "/qqHQsStV6exghCM7zbObuYBiYxw.jpg",
+    "backdropPath": "/kFOHMSzJUFiRC2BZTL2aMmvlCRO.jpg",
+    "cast": ["Henry Fonda", "Lee J. Cobb", "Martin Balsam", "John Fiedler", "E.G. Marshall"],
+    "trailerKey": "yIIxGxFIPbA",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Tubi TV", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 129,
+    "title": "Spirited Away",
+    "overview": "A young girl, Chihiro, becomes trapped in a strange new world of spirits. When her parents undergo a mysterious transformation, she must call upon the courage she never knew she had.",
+    "genres": ["Animation", "Family", "Fantasy"],
+    "language": "ja",
+    "runtime": 125,
+    "releaseYear": 2001,
+    "rating": 8.5,
+    "popularity": 86.7,
+    "posterPath": "/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+    "backdropPath": "/bSXfU4dwZyBA1vMmXvejdRXBvuF.jpg",
+    "cast": ["Daveigh Chase", "Suzanne Pleshette", "Miyu Irino", "Rumi Hiiragi", "Mari Natsuki"],
+    "trailerKey": "ByXuk9QqQkk",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Netflix", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 11216,
+    "title": "Cinema Paradiso",
+    "overview": "A filmmaker recalls his childhood, when he fell in love with the movies at his village's theater and formed a deep friendship with the theater's projectionist.",
+    "genres": ["Drama", "Romance"],
+    "language": "it",
+    "runtime": 124,
+    "releaseYear": 1988,
+    "rating": 8.5,
+    "popularity": 31.8,
+    "posterPath": "/gCI2AeMV6IHjFWBnmFGxLPmEEYq.jpg",
+    "backdropPath": "/cAHzBB8H0cKCSVGMNiPUKeANnT0.jpg",
+    "cast": ["Salvatore Cascio", "Marco Leonardi", "Philippe Noiret", "Antonella Attili", "Enzo Cannavale"],
+    "trailerKey": "tgxGmIeKt3Q",
+    "providers": {
+      "IN": [{ "name": "MUBI", "type": "flatrate" }],
+      "US": [{ "name": "MUBI", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 496243,
+    "title": "Parasite",
+    "overview": "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and idealised Park family, to the point of scamming them.",
+    "genres": ["Comedy", "Thriller", "Drama"],
+    "language": "ko",
+    "runtime": 132,
+    "releaseYear": 2019,
+    "rating": 8.5,
+    "popularity": 95.4,
+    "posterPath": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+    "backdropPath": "/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg",
+    "cast": ["Kang-ho Song", "Sun-kyun Lee", "Yeo-jeong Jo", "Woo-sik Choi", "So-dam Park"],
+    "trailerKey": "5xH0HfJHsaY",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Hulu", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 19404,
+    "title": "Dilwale Dulhania Le Jayenge",
+    "overview": "Raj is a rich, carefree, happy-go-lucky second generation NRI. Simran is the daughter of Chaudhary Baldev Singh, who in spite of being settled in London, is very strict about adhering to Indian values.",
+    "genres": ["Comedy", "Drama", "Romance"],
+    "language": "hi",
+    "runtime": 189,
+    "releaseYear": 1995,
+    "rating": 8.1,
+    "popularity": 29.3,
+    "posterPath": "/2CAL2433ZeIihfX1Hb2139CX0pW.jpg",
+    "backdropPath": "/8GDd1YYuRKzPRUOJ8HqlpS5vZqC.jpg",
+    "cast": ["Shah Rukh Khan", "Kajol", "Amrish Puri", "Farida Jalal", "Anupam Kher"],
+    "trailerKey": "owsVx9MoZEM",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Netflix", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 346364,
+    "title": "It",
+    "overview": "In the Town of Derry, the local kids are disappearing one by one. In a place known as 'The Barrens', a group of seven kids are united by their horrifying and strange encounters with an ancient shapeshifting entity.",
+    "genres": ["Horror", "Drama", "Thriller"],
+    "language": "en",
+    "runtime": 135,
+    "releaseYear": 2017,
+    "rating": 7.3,
+    "popularity": 89.2,
+    "posterPath": "/9E2y5Q7WlCVNnhADQMgQWUEkdkK.jpg",
+    "backdropPath": "/tcheoB8jrFECeMY0ZFBV5aV7p6d.jpg",
+    "cast": ["Jaeden Martell", "Bill Skarsgård", "Jeremy Ray Taylor", "Sophia Lillis", "Finn Wolfhard"],
+    "trailerKey": "xhJ5P7Up3jA",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 324857,
+    "title": "Spider-Man: Into the Spider-Verse",
+    "overview": "Miles Morales is juggling his life between being a high school student and being a spider-man. When Wilson Fisk ignites a super collider, other spider-people are transported to this dimension.",
+    "genres": ["Action", "Adventure", "Animation", "Science Fiction"],
+    "language": "en",
+    "runtime": 117,
+    "releaseYear": 2018,
+    "rating": 8.4,
+    "popularity": 113.5,
+    "posterPath": "/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg",
+    "backdropPath": "/7du3UAr5FGjPMuKMFMFXFQbdYpI.jpg",
+    "cast": ["Shameik Moore", "Jake Johnson", "Hailee Steinfeld", "Mahershala Ali", "Brian Tyree Henry"],
+    "trailerKey": "tg52up16eq0",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Netflix", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 77338,
+    "title": "The Intouchables",
+    "overview": "A true story of two men who should never have met – a quadriplegic aristocrat who was injured in a paragliding accident and a young man from the projects.",
+    "genres": ["Drama", "Comedy"],
+    "language": "fr",
+    "runtime": 112,
+    "releaseYear": 2011,
+    "rating": 8.5,
+    "popularity": 59.1,
+    "posterPath": "/ajNaPmXVVMJFg9convYzFLBQRMF.jpg",
+    "backdropPath": "/b8okHPPr4f2RCZVSJHHxCdFe0MY.jpg",
+    "cast": ["François Cluzet", "Omar Sy", "Anne Le Ny", "Audrey Fleurot", "Clotilde Mollet"],
+    "trailerKey": "ExPqkBs-M0E",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Netflix", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 372058,
+    "title": "Your Name.",
+    "overview": "High schoolers Mitsuha and Taki are complete strangers living separate lives. But one night, they suddenly switch places. Mitsuha wakes up in Taki's body, and he in hers.",
+    "genres": ["Romance", "Animation", "Drama"],
+    "language": "ja",
+    "runtime": 106,
+    "releaseYear": 2016,
+    "rating": 8.4,
+    "popularity": 91.3,
+    "posterPath": "/q719jXXEzOoYaps6babgKnONONX.jpg",
+    "backdropPath": "/mMtUybQ6hL24FXo0F3Z4j2KG7kZ.jpg",
+    "cast": ["Ryunosuke Kamiki", "Mone Kamishiraishi", "Ryo Narita", "Aoi Yuki", "Nobunaga Shimazaki"],
+    "trailerKey": "xU47nhruN-Q",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 1891,
+    "title": "The Empire Strikes Back",
+    "overview": "The epic saga continues as Luke Skywalker, in hopes of defeating the evil Galactic Empire, learns the ways of the Jedi from aging master Yoda.",
+    "genres": ["Adventure", "Action", "Science Fiction"],
+    "language": "en",
+    "runtime": 124,
+    "releaseYear": 1980,
+    "rating": 8.4,
+    "popularity": 82.6,
+    "posterPath": "/2l05cFWJacyIsTpsqSgH0wQXe4V.jpg",
+    "backdropPath": "/54LP0Ccd5HbDsp5gfVL4Hbzef7N.jpg",
+    "cast": ["Mark Hamill", "Harrison Ford", "Carrie Fisher", "Billy Dee Williams", "Anthony Daniels"],
+    "trailerKey": "JNwNXF9Y6kY",
+    "providers": {
+      "IN": [{ "name": "Hotstar", "type": "flatrate" }],
+      "US": [{ "name": "Disney Plus", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 27205,
+    "title": "Inception",
+    "overview": "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets, is offered a chance to regain his old life as payment for a task considered to be impossible.",
+    "genres": ["Action", "Science Fiction", "Adventure"],
+    "language": "en",
+    "runtime": 148,
+    "releaseYear": 2010,
+    "rating": 8.4,
+    "popularity": 141.3,
+    "posterPath": "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+    "backdropPath": "/s2bT29y0ngXxxu2IA8AOzzXTRhd.jpg",
+    "cast": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page", "Tom Hardy", "Ken Watanabe"],
+    "trailerKey": "YoHD9XEInc0",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }, { "name": "Hotstar", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 497,
+    "title": "The Green Mile",
+    "overview": "A supernatural tale set on death row in a Southern prison, where gentle giant John Coffey possesses the mysterious power to heal people's ailments.",
+    "genres": ["Fantasy", "Drama", "Crime"],
+    "language": "en",
+    "runtime": 189,
+    "releaseYear": 1999,
+    "rating": 8.5,
+    "popularity": 67.8,
+    "posterPath": "/velWPhVMQeQKcxggNEU8YmIo52R.jpg",
+    "backdropPath": "/l6hQWH9eDoksZBpWCry0uLWcbRl.jpg",
+    "cast": ["Tom Hanks", "Michael Clarke Duncan", "David Morse", "Bonnie Hunt", "James Cromwell"],
+    "trailerKey": "Ki4haFrqSrw",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 122,
+    "title": "The Lord of the Rings: The Return of the King",
+    "overview": "Aragorn is revealed as the heir to the ancient kings as he, Frodo and the Fellowship continue to fight for the future of Middle-earth.",
+    "genres": ["Adventure", "Fantasy", "Action"],
+    "language": "en",
+    "runtime": 201,
+    "releaseYear": 2003,
+    "rating": 8.5,
+    "popularity": 116.8,
+    "posterPath": "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
+    "backdropPath": "/lXhgCODAbBXL5buk9yEmTpOoOgR.jpg",
+    "cast": ["Elijah Wood", "Viggo Mortensen", "Ian McKellen", "Liv Tyler", "Orlando Bloom"],
+    "trailerKey": "r5X-hFf6Bwo",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }, { "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 98,
+    "title": "Gladiator",
+    "overview": "In the year 180, the death of emperor Marcus Aurelius throws the Roman Empire into chaos. Maximus is one of the Roman army's most capable and trusted generals.",
+    "genres": ["Action", "Drama", "Adventure"],
+    "language": "en",
+    "runtime": 155,
+    "releaseYear": 2000,
+    "rating": 8.2,
+    "popularity": 93.7,
+    "posterPath": "/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg",
+    "backdropPath": "/6WBIzCgmDCYrqh64yDREGeDk9d3.jpg",
+    "cast": ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen", "Oliver Reed", "Derek Jacobi"],
+    "trailerKey": "owK1qxDselE",
+    "providers": {
+      "IN": [{ "name": "Hotstar", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }],
+      "US": [{ "name": "Paramount Plus", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 769,
+    "title": "GoodFellas",
+    "overview": "The true story of Henry Hill, a half-Irish, half-Sicilian Brooklyn kid who is adopted by the Mob at an early age and climbs the ranks of a New York crime family.",
+    "genres": ["Drama", "Crime"],
+    "language": "en",
+    "runtime": 146,
+    "releaseYear": 1990,
+    "rating": 8.5,
+    "popularity": 68.5,
+    "posterPath": "/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
+    "backdropPath": "/sw7mordbZxgITU877yTpZCud90M.jpg",
+    "cast": ["Ray Liotta", "Robert De Niro", "Joe Pesci", "Lorraine Bracco", "Paul Sorvino"],
+    "trailerKey": "qo5jJpHtI1Y",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 429,
+    "title": "The Good, the Bad and the Ugly",
+    "overview": "While the Civil War rages, three men — a professional gunslinger, a ruthless hitman, and a Mexican bandit — compete to find a fortune in gold buried in a remote cemetery.",
+    "genres": ["Western"],
+    "language": "en",
+    "runtime": 161,
+    "releaseYear": 1966,
+    "rating": 8.5,
+    "popularity": 55.1,
+    "posterPath": "/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg",
+    "backdropPath": "/AfmXncBmZSO3R6I5oiHd0P0plIv.jpg",
+    "cast": ["Clint Eastwood", "Eli Wallach", "Lee Van Cleef", "Aldo Giuffrè", "Luigi Pistilli"],
+    "trailerKey": "WCN5JJY_wiA",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 245891,
+    "title": "John Wick",
+    "overview": "Ex-hitman John Wick comes out of retirement to track down the gangsters that took everything from him.",
+    "genres": ["Action", "Thriller", "Crime"],
+    "language": "en",
+    "runtime": 101,
+    "releaseYear": 2014,
+    "rating": 7.4,
+    "popularity": 117.9,
+    "posterPath": "/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg",
+    "backdropPath": "/mMZRKb3NVTQid4Zf5E1F4n9EZmm.jpg",
+    "cast": ["Keanu Reeves", "Michael Nyqvist", "Alfie Allen", "Willem Dafoe", "Dean Winters"],
+    "trailerKey": "2AUmvWm5ZDQ",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Peacock", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 598,
+    "title": "City of God",
+    "overview": "In the slums of Rio, two kids take different paths: one becomes a photographer, the other a drug dealer.",
+    "genres": ["Drama", "Crime"],
+    "language": "pt",
+    "runtime": 130,
+    "releaseYear": 2002,
+    "rating": 8.6,
+    "popularity": 52.4,
+    "posterPath": "/k7eYdWvhYQyRQoU2TB2A2Xu2grZ.jpg",
+    "backdropPath": "/5F5kVPE65E4H2cmnYNc4VAXFNHQ.jpg",
+    "cast": ["Alexandre Rodrigues", "Leandro Firmino", "Phellipe Haagensen", "Douglas Silva", "Jonathan Haagensen"],
+    "trailerKey": "dcUOQSL2GHs",
+    "providers": {
+      "IN": [{ "name": "Netflix", "type": "flatrate" }],
+      "US": [{ "name": "Netflix", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 637,
+    "title": "Life Is Beautiful",
+    "overview": "A touching story of an Italian Jewish man who uses humor and imagination to shield his son from the horror of internment in a Nazi concentration camp.",
+    "genres": ["Comedy", "Drama", "Romance"],
+    "language": "it",
+    "runtime": 116,
+    "releaseYear": 1997,
+    "rating": 8.5,
+    "popularity": 47.3,
+    "posterPath": "/6vgNfNKOHWHmOZwgmWdKQhCjQZ4.jpg",
+    "backdropPath": "/5c73dEjQOOK5mqMbLFGBJOKWJEn.jpg",
+    "cast": ["Roberto Benigni", "Nicoletta Braschi", "Giorgio Cantarini", "Giustino Durano", "Sergio Bustric"],
+    "trailerKey": "BpJPL5C9x4Q",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 447332,
+    "title": "A Quiet Place",
+    "overview": "A family struggles to survive in a post-apocalyptic world inhabited by blind monsters with an acute sense of hearing.",
+    "genres": ["Drama", "Horror", "Science Fiction"],
+    "language": "en",
+    "runtime": 90,
+    "releaseYear": 2018,
+    "rating": 7.5,
+    "popularity": 104.2,
+    "posterPath": "/nAU74GmpUk7t5iklEp3bufwDq4n.jpg",
+    "backdropPath": "/roMwCFAjDIAAoT7lRfY5EX1su0i.jpg",
+    "cast": ["Emily Blunt", "John Krasinski", "Millicent Simmonds", "Noah Jupe", "Cade Woodward"],
+    "trailerKey": "WR7cc5t7tv8",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Paramount Plus", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "flatrate" }]
+    }
+  },
+  {
+    "tmdbId": 500,
+    "title": "Reservoir Dogs",
+    "overview": "A group of thieves assemble to pull off the perfect diamond heist. It goes horribly wrong, and in the aftermath the surviving criminals try to figure out which one of them is a police informant.",
+    "genres": ["Crime", "Thriller"],
+    "language": "en",
+    "runtime": 99,
+    "releaseYear": 1992,
+    "rating": 8.1,
+    "popularity": 55.8,
+    "posterPath": "/lsBnfheKZBO4IdKkgH1eHCGlEaL.jpg",
+    "backdropPath": "/nRPFkHl2lgGPbm6aSWxeqGaGVNM.jpg",
+    "cast": ["Harvey Keitel", "Tim Roth", "Michael Madsen", "Chris Penn", "Steve Buscemi"],
+    "trailerKey": "vil9hEqABCw",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 693134,
+    "title": "Dune: Part Two",
+    "overview": "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family.",
+    "genres": ["Science Fiction", "Adventure", "Action"],
+    "language": "en",
+    "runtime": 167,
+    "releaseYear": 2024,
+    "rating": 8.3,
+    "popularity": 158.4,
+    "posterPath": "/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+    "backdropPath": "/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg",
+    "cast": ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Josh Brolin", "Austin Butler"],
+    "trailerKey": "Way9Dexny3w",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }],
+      "US": [{ "name": "Max", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  },
+  {
+    "tmdbId": 361743,
+    "title": "Top Gun: Maverick",
+    "overview": "After more than thirty years of service as one of the Navy's top aviators, Pete Mitchell is where he belongs, pushing the envelope as a courageous test pilot.",
+    "genres": ["Action", "Drama"],
+    "language": "en",
+    "runtime": 131,
+    "releaseYear": 2022,
+    "rating": 8.0,
+    "popularity": 169.3,
+    "posterPath": "/62HCnUTziyWcpDaBO2i1DX17ljH.jpg",
+    "backdropPath": "/AkJQpZp9WoNdj7pLYSj1L0RcMMN.jpg",
+    "cast": ["Tom Cruise", "Miles Teller", "Jennifer Connelly", "Jon Hamm", "Glen Powell"],
+    "trailerKey": "qSqVVswa420",
+    "providers": {
+      "IN": [{ "name": "Amazon Prime Video", "type": "flatrate" }, { "name": "Hotstar", "type": "flatrate" }],
+      "US": [{ "name": "Paramount Plus", "type": "flatrate" }, { "name": "Amazon Prime Video", "type": "rent" }]
+    }
+  }
+]

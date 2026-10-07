@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: movie-mystery-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false          # set in Render dashboard
+      - key: JWT_SECRET
+        sync: false          # set in Render dashboard
+      - key: TMDB_API_KEY
+        sync: false          # set in Render dashboard
+      - key: CLIENT_ORIGIN
+        sync: false          # e.g. https://movie-mystery.vercel.app
+      - key: STALE_DAYS
+        value: 7
