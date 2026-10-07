@@ -7,7 +7,7 @@ const register = async ({ name, email, password }) => {
   const exists = await User.findOne({ email });
   if (exists) throw ApiError.badRequest('Email already registered');
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  const passwordHash = await bcrypt.hash(password, 10);
   const user = await User.create({ name, email, passwordHash });
   const token = signToken(user._id);
   return { token, user: user.toSafeObject() };

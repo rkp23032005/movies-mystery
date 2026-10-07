@@ -177,7 +177,15 @@ const getMovieById = async (id) => {
   return { movie, similar };
 };
 
+let filterMetaCache = null;
+let filterMetaCacheTime = 0;
+const FILTER_META_TTL = 60 * 60 * 1000; // 1 hour
+
 const getFilterMeta = async () => {
+  if (filterMetaCache && Date.now() - filterMetaCacheTime < FILTER_META_TTL) {
+    return filterMetaCache;
+  }
+
   const [genres, languages, providerAgg] = await Promise.all([
     Movie.distinct('genres'),
     Movie.distinct('language'),
@@ -191,11 +199,13 @@ const getFilterMeta = async () => {
     ]),
   ]);
 
-  return {
+  filterMetaCache = {
     genres:    genres.filter(Boolean).sort(),
     languages: languages.filter(Boolean).sort(),
     platforms: providerAgg.map((p) => p._id).filter(Boolean),
   };
+  filterMetaCacheTime = Date.now();
+  return filterMetaCache;
 };
 
 module.exports = { queryMovies, getMovieById, getFilterMeta };
