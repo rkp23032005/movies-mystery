@@ -24,7 +24,20 @@ app.set('trust proxy', 1);
 
 // Security
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }));
+// CLIENT_ORIGIN may hold several comma-separated origins; trailing slashes are ignored
+// (browsers send Origin without one, so "https://x.vercel.app/" would never match).
+const allowedOrigins = (process.env.CLIENT_ORIGIN || '')
+  .split(',')
+  .map((o) => o.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+app.use(cors({
+  origin: (origin, cb) => {
+    // No Origin header = same-origin / curl / health checks
+    if (!origin || allowedOrigins.includes(origin.replace(/\/+$/, ''))) return cb(null, true);
+    return cb(null, false);
+  },
+  credentials: true,
+}));
 // Global rate limit
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false }));
 

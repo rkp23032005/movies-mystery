@@ -8,7 +8,14 @@ let io;
 
 function init(httpServer) {
   io = new Server(httpServer, {
-    cors: { origin: process.env.CLIENT_ORIGIN, credentials: true },
+    cors: {
+      // Same rules as app.js: comma-separated list, trailing slashes ignored
+      origin: (process.env.CLIENT_ORIGIN || '')
+        .split(',')
+        .map((o) => o.trim().replace(/\/+$/, ''))
+        .filter(Boolean),
+      credentials: true,
+    },
   });
 
   // ── JWT auth middleware ──────────────────────────────────────────────────
