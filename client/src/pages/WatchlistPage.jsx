@@ -3,104 +3,155 @@ import { Link } from 'react-router-dom';
 import { fetchWatchlist } from '../services/movieService';
 import { useAuth } from '../context/AuthContext';
 import { useWatchlist } from '../context/WatchlistContext';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { PageShell, EmptyState, ErrorState } from '../components/ui';
+import Button from '../components/Button';
+import { Select } from '../components/FormControls';
 import MovieCard from '../components/MovieCard';
+import OrderToggle from '../components/OrderToggle';
 import { GridSkeleton } from '../components/Skeletons';
 
 const SORT_OPTIONS = [
   { value: 'addedAt', label: 'Date added' },
-  { value: 'rating',  label: 'Rating' },
-  { value: 'year',    label: 'Year' },
-  { value: 'title',   label: 'Title' },
+  { value: 'rating', label: 'Rating' },
+  { value: 'year', label: 'Year' },
+  { value: 'title', label: 'Title' },
 ];
 
 export default function WatchlistPage() {
+  useDocumentTitle('My Watchlist');
   const { user } = useAuth();
   const { savedIds } = useWatchlist();
   const region = user?.profile?.region ?? 'IN';
 
-  const [movies, setMovies]   = useState([]);
+  const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState('');
-  const [sortBy, setSortBy]   = useState('addedAt');
-  const [order, setOrder]     = useState('desc');
+  const [error, setError] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
+  const [sortBy, setSortBy] = useState('addedAt');
+  const [order, setOrder] = useState('desc');
   const [platform, setPlatform] = useState('');
 
   const myPlatforms = user?.profile?.ownedPlatforms ?? [];
 
-  const load = () => {
+  // Reload when sort/filter changes or when savedIds changes (add/remove)
+  useEffect(() => {
+    let cancelled = false;
     setLoading(true);
     setError('');
     const params = { sortBy, order, region };
     if (platform) params.platform = platform;
     fetchWatchlist(params)
-      .then((r) => setMovies(r.data.movies))
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
-  };
+      .then((r) => !cancelled && setMovies(r.data.movies))
+      .catch((e) => !cancelled && setError(e.message))
+      .finally(() => !cancelled && setLoading(false));
+    return () => {
+      cancelled = true;
+    };
+  }, [sortBy, order, platform, region, savedIds, reloadKey]);
 
-  // Reload when sort/filter changes or when savedIds changes (add/remove)
-  useEffect(load, [sortBy, order, platform, region, savedIds]); // eslint-disable-line react-hooks/exhaustive-deps
+  // A movie you just un-saved leaves the grid immediately; the refetch then confirms it. (Saving
+  // it again before the refetch lands brings it straight back, because it's still in `movies`.)
+  const visible = movies.filter((m) => savedIds.has(m._id));
+  const firstLoad = loading && movies.length === 0;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <div className="max-w-screen-xl mx-auto px-4 py-8 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
+    <PageShell>
+      <div className="page-container py-10 lg:py-14">
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
           <div>
-            <h1 className="text-2xl font-bold">My Watchlist</h1>
-            {!loading && <p className="text-sm text-gray-400 mt-1">{movies.length} movie{movies.length !== 1 ? 's' : ''}</p>}
+            <h1 className="text-4xl font-black leading-none text-white sm:text-5xl">
+              My Watchlist
+            </h1>
+            <p className="mt-3 min-h-6 text-sm text-gray-400" aria-live="polite">
+              {!firstLoad && !error && (
+                <>
+                  <span className="font-semibold text-white">{visible.length}</span> movie
+                  {visible.length !== 1 ? 's' : ''} saved
+                </>
+              )}
+            </p>
           </div>
-          <Link to="/explore" className="text-sm text-indigo-400 hover:underline">← Explore</Link>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {myPlatforms.length > 0 && (
+              <>
+                <label htmlFor="watchlist-platform" className="sr-only">
+                  Platform
+                </label>
+                <Select
+                  id="watchlist-platform"
+                  value={platform}
+                  onChange={(e) => setPlatform(e.target.value)}
+                  className="w-48"
+                >
+                  <option value="">All platforms</option>
+                  {myPlatforms.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </Select>
+              </>
+            )}
+            <label htmlFor="watchlist-sort" className="sr-only">
+              Sort by
+            </label>
+            <Select
+              id="watchlist-sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-40"
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </Select>
+            <OrderToggle
+              order={order}
+              onToggle={() => setOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
+            />
+          </div>
         </div>
 
-        {/* Controls */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-gray-800 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
+        <div className="mt-8" aria-busy={loading}>
+          {error && (
+            <ErrorState
+              title="Couldn’t load your watchlist"
+              message={error}
+              onRetry={() => setReloadKey((k) => k + 1)}
+            />
+          )}
 
-          <button
-            onClick={() => setOrder((o) => o === 'asc' ? 'desc' : 'asc')}
-            className="bg-gray-800 hover:bg-gray-700 rounded-lg px-3 py-2 text-sm transition"
-          >
-            {order === 'asc' ? '↑ Asc' : '↓ Desc'}
-          </button>
+          {firstLoad && !error && <GridSkeleton count={10} />}
 
-          {/* Platform filter — only show platforms the user owns */}
-          {myPlatforms.length > 0 && (
-            <select
-              value={platform}
-              onChange={(e) => setPlatform(e.target.value)}
-              className="bg-gray-800 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+          {!firstLoad && !error && visible.length === 0 && (
+            <EmptyState
+              title="Your watchlist is empty"
+              body="Tap the heart on any movie to save it here for later."
+              action={
+                <Button as={Link} to="/explore">
+                  Browse movies
+                </Button>
+              }
+            />
+          )}
+
+          {!error && visible.length > 0 && (
+            <div
+              className={`grid grid-cols-2 gap-x-4 gap-y-8 transition-opacity duration-200 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 ${
+                loading ? 'opacity-60' : ''
+              }`}
             >
-              <option value="">All platforms</option>
-              {myPlatforms.map((p) => <option key={p} value={p}>{p}</option>)}
-            </select>
+              {visible.map((m) => (
+                <MovieCard key={m._id} movie={m} region={region} />
+              ))}
+            </div>
           )}
         </div>
-
-        {error && <p className="text-red-400 text-sm">{error}</p>}
-
-        {loading && <GridSkeleton count={10} />}
-
-        {!loading && !error && movies.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-center space-y-3">
-            <p className="text-4xl">🎬</p>
-            <p className="text-gray-300 text-lg">Your watchlist is empty</p>
-            <Link to="/explore" className="text-indigo-400 hover:underline text-sm">Browse movies</Link>
-          </div>
-        )}
-
-        {!loading && !error && movies.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {movies.map((m) => <MovieCard key={m._id} movie={m} region={region} />)}
-          </div>
-        )}
       </div>
-    </div>
+    </PageShell>
   );
 }

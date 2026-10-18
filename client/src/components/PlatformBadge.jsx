@@ -7,7 +7,7 @@ const TYPE_LABEL = { flatrate: 'Stream', rent: 'Rent', buy: 'Buy' };
 export default function PlatformBadge({ name, type, showType = false }) {
   const color = PLATFORM_COLORS[platformKey(name)] ?? DEFAULT_COLOR;
   return (
-    <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${color}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ring-white/10 ${color}`}>
       {name}
       {showType && type && (
         <span className="opacity-60 text-[10px]">· {TYPE_LABEL[type] ?? type}</span>

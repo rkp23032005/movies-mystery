@@ -2,11 +2,20 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { joinRoom } from '../services/roomService';
 import { useToast } from '../context/ToastContext';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 import { PageShell } from '../components/ui';
+import Button from '../components/Button';
+import Surface from '../components/Surface';
+import { Field, Input } from '../components/FormControls';
 
 export default function JoinRoomPage() {
+  useDocumentTitle('Join a room');
   const [searchParams] = useSearchParams();
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
     defaultValues: { code: (searchParams.get('code') ?? '').toUpperCase().slice(0, 6) },
   });
   const navigate = useNavigate();
@@ -23,43 +32,46 @@ export default function JoinRoomPage() {
   };
 
   return (
-    <PageShell back>
-      <div className="flex items-center justify-center min-h-[calc(100vh-65px)] px-4">
-        <form
+    <PageShell back footer={false}>
+      <div className="page-container flex min-h-[calc(100dvh-var(--nav-h))] items-center justify-center py-10">
+        <Surface
+          as="form"
+          variant="raised"
+          padding="lg"
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-gray-900 p-8 rounded-2xl w-full max-w-sm space-y-4"
           noValidate
+          aria-busy={isSubmitting}
+          className="w-full max-w-lg space-y-8"
         >
-          <h1 className="text-2xl font-bold text-center">🔑 Join a Room</h1>
-
           <div>
-            <label htmlFor="code" className="sr-only">Invite code</label>
-            <input
+            <h1 className="text-3xl font-black text-white sm:text-4xl">Join a room</h1>
+            <p className="mt-2 text-gray-400">
+              Enter the 6-character code the host shared with you.
+            </p>
+          </div>
+
+          <Field label="Invite code" htmlFor="code" error={errors.code?.message}>
+            <Input
               id="code"
-              placeholder="6-character invite code"
+              placeholder="ABC123"
               autoComplete="off"
-              className="w-full bg-gray-800 rounded-lg px-4 py-2 uppercase tracking-widest outline-none focus:ring-2 focus:ring-indigo-500"
+              autoCapitalize="characters"
+              spellCheck={false}
               maxLength={6}
+              aria-invalid={!!errors.code}
               aria-describedby={errors.code ? 'code-error' : undefined}
+              className="h-16 text-center font-mono text-3xl! font-bold uppercase tracking-[0.4em] placeholder:tracking-[0.4em] placeholder:text-gray-600"
               {...register('code', {
                 required: 'Code is required',
                 minLength: { value: 6, message: 'Must be 6 characters' },
               })}
             />
-            {errors.code && (
-              <p id="code-error" role="alert" className="text-red-400 text-xs mt-1">
-                {errors.code.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-500 rounded-lg py-2 font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-          >
+          <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
             Join
-          </button>
-        </form>
+          </Button>
+        </Surface>
       </div>
     </PageShell>
   );

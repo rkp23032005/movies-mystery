@@ -1,5 +1,6 @@
 const tmdb = require('./tmdbClient');
 const Movie = require('../models/Movie');
+const { flush, invalidatePrefix } = require('../utils/ramCache');
 
 // ── config ───────────────────────────────────────────────────────────────────
 
@@ -194,6 +195,7 @@ const syncDiscover = async ({
   }
 
   console.log(`Discover sync complete — ${stored} stored, ${skipped} already fresh, ${failed} failed`);
+  flush(); // clear RAM cache so new data is served immediately
   return { stored, skipped, failed };
 };
 
@@ -210,6 +212,9 @@ const syncOneIfStale = async (tmdbId) => {
   }
   const detail = await fetchDetail(tmdbId);
   await Movie.findOneAndUpdate({ tmdbId }, { $set: mapDetailedMovie(detail) }, { upsert: true });
+  // Bust any cached detail/list entries that may contain this movie
+  invalidatePrefix(`movie-detail:`);
+  invalidatePrefix(`movies-list:`);
 };
 
 // Kept for backwards compatibility with `npm run sync` / older callers:
@@ -239,6 +244,7 @@ const sync = async ({ pagesPerList = 5, withDetails = true } = {}) => {
     console.log(`  synced ${docs.length} from ${endpoint}`);
   }
   console.log(`Sync complete — ${total} operations`);
+  flush(); // clear RAM cache so new data is served immediately
   return total;
 };
 

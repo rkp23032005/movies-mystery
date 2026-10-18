@@ -3,9 +3,18 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { login as loginApi } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import AuthLayout from '../components/AuthLayout';
+import Button from '../components/Button';
+import { Field, Input, PasswordInput } from '../components/FormControls';
 
 export default function LoginPage() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  useDocumentTitle('Log in');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
   const { saveAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,40 +32,53 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-gray-900 p-8 rounded-2xl w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-center">Welcome back</h1>
+    <AuthLayout>
+      <h1 className="text-4xl font-black leading-none text-white">Welcome back</h1>
 
-        {serverError && <p className="text-red-400 text-sm text-center">{serverError}</p>}
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5" aria-busy={isSubmitting}>
+        {serverError && (
+          <p
+            role="alert"
+            className="rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-300 ring-1 ring-inset ring-red-400/30"
+          >
+            {serverError}
+          </p>
+        )}
 
-        <div>
-          <input
-            placeholder="Email"
+        <Field label="Email" htmlFor="login-email" error={errors.email?.message}>
+          <Input
+            id="login-email"
             type="email"
-            className="w-full bg-gray-800 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+            autoComplete="email"
+            aria-invalid={!!errors.email}
             {...register('email', { required: 'Email is required' })}
           />
-          {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
-        </div>
+        </Field>
 
-        <div>
-          <input
-            placeholder="Password"
-            type="password"
-            className="w-full bg-gray-800 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+        <Field label="Password" htmlFor="login-password" error={errors.password?.message}>
+          <PasswordInput
+            id="login-password"
+            autoComplete="current-password"
+            aria-invalid={!!errors.password}
             {...register('password', { required: 'Password is required' })}
           />
-          {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
-        </div>
+        </Field>
 
-        <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 rounded-lg py-2 font-semibold transition">
+        <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
           Log in
-        </button>
+        </Button>
 
         <p className="text-center text-sm text-gray-400">
-          No account? <Link to="/register" className="text-indigo-400 hover:underline">Register</Link>
+          No account?{' '}
+          <Link
+            to="/register"
+            state={location.state}
+            className="rounded-sm font-medium text-brass-300 underline-offset-4 hover:underline focus-ring"
+          >
+            Register
+          </Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

@@ -1,17 +1,34 @@
 import { Link } from 'react-router-dom';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { PageShell } from '../components/ui';
+import Button from '../components/Button';
 
 export default function NotFoundPage() {
+  useDocumentTitle('Page not found');
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950 text-white text-center px-4">
-      <span className="text-7xl mb-6" aria-hidden="true">🎭</span>
-      <h1 className="text-4xl font-black mb-2">404</h1>
-      <p className="text-gray-400 mb-8">This scene doesn't exist.</p>
-      <Link
-        to="/"
-        className="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-      >
-        Back to home
-      </Link>
-    </div>
+    <PageShell>
+      <div className="page-container flex min-h-[calc(100dvh-var(--nav-h)-9rem)] flex-col items-center justify-center py-16 text-center">
+        <p
+          aria-hidden="true"
+          className="font-display text-[8rem] font-black leading-none text-brass-400/90 sm:text-[11rem]"
+        >
+          404
+        </p>
+        <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">
+          This scene doesn't exist.
+        </h1>
+        <p className="mt-3 max-w-md text-gray-400">
+          The page you're looking for was cut from the final edit, or the link is wrong.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Button as={Link} to="/" size="lg">
+            Back to home
+          </Button>
+          <Button as={Link} to="/explore" variant="secondary" size="lg">
+            Browse movies
+          </Button>
+        </div>
+      </div>
+    </PageShell>
   );
 }

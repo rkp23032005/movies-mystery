@@ -14,6 +14,14 @@ export default [
       globals: {
         window: 'readonly', document: 'readonly', console: 'readonly', localStorage: 'readonly',
         navigator: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly',
+        // Browser APIs used by animation / layout code (e.g. the upcoming Morph Gallery)
+        setInterval: 'readonly', clearInterval: 'readonly',
+        requestAnimationFrame: 'readonly', cancelAnimationFrame: 'readonly',
+        matchMedia: 'readonly', getComputedStyle: 'readonly',
+        IntersectionObserver: 'readonly', ResizeObserver: 'readonly',
+        Image: 'readonly', URL: 'readonly', URLSearchParams: 'readonly',
+        fetch: 'readonly', createImageBitmap: 'readonly', performance: 'readonly',
+        AbortController: 'readonly',
       },
     },
     rules: {

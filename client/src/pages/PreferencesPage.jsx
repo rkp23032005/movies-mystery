@@ -2,45 +2,77 @@ import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { submitPreferences } from '../services/roomService';
 import { useState } from 'react';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { PageShell } from '../components/ui';
+import Button from '../components/Button';
+import { ChipToggle, Field, Input } from '../components/FormControls';
+import RoomHeader from '../components/RoomHeader';
+import Surface from '../components/Surface';
+import { languageName } from '../utils/format';
 
-const GENRE_OPTIONS   = ['Action','Adventure','Animation','Comedy','Crime','Documentary','Drama','Family','Fantasy','History','Horror','Mystery','Romance','Science Fiction','Thriller','War','Western'];
-const PLATFORM_OPTIONS = ['Netflix','Amazon Prime Video','Disney Plus','Hotstar','Max','Hulu','Paramount Plus','Apple TV Plus'];
-const LANGUAGE_OPTIONS = ['en','hi','es','fr','de','ja','ko','pt','it','zh'];
-const MOOD_OPTIONS    = ['light','dark','romantic','adventurous','thoughtful','scary'];
+const GENRE_OPTIONS = [
+  'Action',
+  'Adventure',
+  'Animation',
+  'Comedy',
+  'Crime',
+  'Documentary',
+  'Drama',
+  'Family',
+  'Fantasy',
+  'History',
+  'Horror',
+  'Mystery',
+  'Romance',
+  'Science Fiction',
+  'Thriller',
+  'War',
+  'Western',
+];
+const PLATFORM_OPTIONS = [
+  'Netflix',
+  'Amazon Prime Video',
+  'Disney Plus',
+  'Hotstar',
+  'Max',
+  'Hulu',
+  'Paramount Plus',
+  'Apple TV Plus',
+];
+const LANGUAGE_OPTIONS = ['en', 'hi', 'es', 'fr', 'de', 'ja', 'ko', 'pt', 'it', 'zh'];
+const MOOD_OPTIONS = ['light', 'dark', 'romantic', 'adventurous', 'thoughtful', 'scary'];
 
-function MultiSelect({ label, options, value = [], onChange }) {
+function MultiSelect({ label, options, value = [], onChange, format = (o) => o }) {
   const toggle = (opt) =>
     onChange(value.includes(opt) ? value.filter((v) => v !== opt) : [...value, opt]);
   return (
-    <div>
-      <p className="text-sm text-gray-400 mb-1">{label}</p>
+    <fieldset>
+      <legend className="mb-3 text-sm font-medium text-gray-300">{label}</legend>
       <div className="flex flex-wrap gap-2">
         {options.map((opt) => (
-          <button
-            key={opt}
-            type="button"
-            onClick={() => toggle(opt)}
-            className={`px-3 py-1 rounded-full text-sm transition ${
-              value.includes(opt) ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
-          >
-            {opt}
-          </button>
+          <ChipToggle key={opt} pressed={value.includes(opt)} onClick={() => toggle(opt)}>
+            {format(opt)}
+          </ChipToggle>
         ))}
       </div>
-    </div>
+    </fieldset>
   );
 }
 
 export default function PreferencesPage() {
   const { code } = useParams();
+  useDocumentTitle('Your preferences');
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm({ defaultValues: { minRating: 0, maxRuntime: '' } });
-  const [genres,    setGenres]    = useState([]);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm({ defaultValues: { minRating: 0, maxRuntime: '' } });
+  const [genres, setGenres] = useState([]);
   const [platforms, setPlatforms] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [mood,      setMood]      = useState('');
-  const [error,     setError]     = useState('');
+  const [mood, setMood] = useState('');
+  const [error, setError] = useState('');
 
   const onSubmit = async (data) => {
     setError('');
@@ -49,8 +81,8 @@ export default function PreferencesPage() {
         genres,
         platforms,
         languages,
-        mood:       mood || null,
-        minRating:  Number(data.minRating) || 0,
+        mood: mood || null,
+        minRating: Number(data.minRating) || 0,
         maxRuntime: data.maxRuntime ? Number(data.maxRuntime) : null,
       });
       navigate(`/rooms/${code}`);
@@ -60,67 +92,116 @@ export default function PreferencesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center py-12 px-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-gray-900 rounded-2xl p-8 w-full max-w-lg space-y-6">
-        <h1 className="text-2xl font-bold text-center">🎭 Your Preferences</h1>
+    <PageShell footer={false}>
+      <div className="page-container py-8 lg:py-12">
+        <RoomHeader code={code.toUpperCase()} step="lobby" />
+        <div className="mx-auto mt-8 max-w-3xl">
+          <h1 className="text-4xl font-black leading-none text-white sm:text-5xl">
+            Your preferences
+          </h1>
+          <p className="mt-3 text-gray-400">
+            Pick what you're in the mood for — the group's picks are merged into one shortlist.
+          </p>
 
-        <MultiSelect label="Genres" options={GENRE_OPTIONS} value={genres} onChange={setGenres} />
-        <MultiSelect label="Streaming Platforms" options={PLATFORM_OPTIONS} value={platforms} onChange={setPlatforms} />
-        <MultiSelect label="Languages" options={LANGUAGE_OPTIONS} value={languages} onChange={setLanguages} />
-
-        <div>
-          <p className="text-sm text-gray-400 mb-1">Mood (optional)</p>
-          <div className="flex flex-wrap gap-2">
-            {MOOD_OPTIONS.map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setMood(mood === m ? '' : m)}
-                className={`px-3 py-1 rounded-full text-sm capitalize transition ${
-                  mood === m ? 'bg-purple-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm text-gray-400">Min Rating (0–10)</label>
-            <input
-              type="number" min="0" max="10" step="0.5"
-              className="w-full mt-1 bg-gray-800 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
-              {...register('minRating')}
-            />
-          </div>
-          <div>
-            <label className="text-sm text-gray-400">Max Runtime (min)</label>
-            <input
-              type="number" min="30" max="300"
-              placeholder="Any"
-              className="w-full mt-1 bg-gray-800 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
-              {...register('maxRuntime')}
-            />
-          </div>
-        </div>
-
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => navigate(`/rooms/${code}`)}
-            className="flex-1 bg-gray-700 hover:bg-gray-600 rounded-lg py-2 font-medium transition"
+          <Surface
+            as="form"
+            variant="raised"
+            padding="lg"
+            onSubmit={handleSubmit(onSubmit)}
+            className="mt-8 space-y-8"
+            aria-busy={isSubmitting}
           >
-            Cancel
-          </button>
-          <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-500 rounded-lg py-2 font-semibold transition">
-            Save Preferences
-          </button>
+            <MultiSelect
+              label="Genres"
+              options={GENRE_OPTIONS}
+              value={genres}
+              onChange={setGenres}
+            />
+            <div className="perforation-t pt-8">
+              <MultiSelect
+                label="Streaming platforms"
+                options={PLATFORM_OPTIONS}
+                value={platforms}
+                onChange={setPlatforms}
+              />
+            </div>
+            <div className="perforation-t pt-8">
+              <MultiSelect
+                label="Languages"
+                options={LANGUAGE_OPTIONS}
+                value={languages}
+                onChange={setLanguages}
+                format={languageName}
+              />
+            </div>
+
+            <div className="perforation-t pt-8">
+              <fieldset>
+                <legend className="mb-3 text-sm font-medium text-gray-300">Mood (optional)</legend>
+                <div className="flex flex-wrap gap-2">
+                  {MOOD_OPTIONS.map((m) => (
+                    <ChipToggle
+                      key={m}
+                      tone="brass"
+                      pressed={mood === m}
+                      className="capitalize"
+                      onClick={() => setMood(mood === m ? '' : m)}
+                    >
+                      {m}
+                    </ChipToggle>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+
+            <div className="perforation-t grid gap-5 pt-8 sm:grid-cols-2">
+              <Field label="Min Rating (0–10)" htmlFor="pref-rating">
+                <Input
+                  id="pref-rating"
+                  type="number"
+                  min="0"
+                  max="10"
+                  step="0.5"
+                  {...register('minRating')}
+                />
+              </Field>
+              <Field label="Max Runtime (min)" htmlFor="pref-runtime">
+                <Input
+                  id="pref-runtime"
+                  type="number"
+                  min="30"
+                  max="300"
+                  placeholder="Any"
+                  {...register('maxRuntime')}
+                />
+              </Field>
+            </div>
+
+            {error && (
+              <p
+                role="alert"
+                className="rounded-lg bg-red-500/10 px-4 py-3 text-center text-sm text-red-300 ring-1 ring-inset ring-red-400/30"
+              >
+                {error}
+              </p>
+            )}
+
+            <div className="sticky bottom-0 -mx-6 -mb-6 flex gap-3 rounded-b-2xl border-t border-white/10 bg-gray-900/95 px-6 py-4 sm:-mx-8 sm:-mb-8 sm:px-8">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="flex-1"
+                onClick={() => navigate(`/rooms/${code}`)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" size="lg" className="flex-1" loading={isSubmitting}>
+                Save Preferences
+              </Button>
+            </div>
+          </Surface>
         </div>
-      </form>
-    </div>
+      </div>
+    </PageShell>
   );
 }

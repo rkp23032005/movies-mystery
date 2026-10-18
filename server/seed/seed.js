@@ -11,7 +11,10 @@
  * The static bundle is always upserted first so the DB is never empty even if
  * the TMDB phase is skipped.
  */
-require('dotenv').config();
+require('dotenv').config({
+  path: require('path').resolve(__dirname, '../.env')
+});
+console.log('MONGO_URI loaded:', !!process.env.MONGO_URI);
 const path = require('path');
 const mongoose = require('mongoose');
 const connectDB = require('../config/db');

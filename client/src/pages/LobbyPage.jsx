@@ -2,127 +2,215 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRoom, startVoting } from '../services/roomService';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { useSocket } from '../hooks/useSocket';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { PageShell, Spinner, ErrorState } from '../components/ui';
+import Avatar from '../components/Avatar';
+import Badge from '../components/Badge';
+import Button from '../components/Button';
+import RoomHeader from '../components/RoomHeader';
+import Surface from '../components/Surface';
 
 export default function LobbyPage() {
-  const { code }  = useParams();
-  const { user }  = useAuth();
-  const navigate  = useNavigate();
-  const [room, setRoom]     = useState(null);
-  const [error, setError]   = useState('');
+  const { code } = useParams();
+  useDocumentTitle(`Room ${code}`);
+  const { user } = useAuth();
+  const toast = useToast();
+  const navigate = useNavigate();
+  const [room, setRoom] = useState(null);
+  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [starting, setStarting] = useState(false);
 
-  const applySnapshot = useCallback((r) => {
-    setRoom(r);
-    if (r.status === 'voting')   navigate(`/rooms/${code}/vote`);
-    if (r.status === 'revealed') navigate(`/rooms/${code}/reveal`);
-  }, [code, navigate]);
+  const applySnapshot = useCallback(
+    (r) => {
+      setRoom(r);
+      if (r.status === 'voting') navigate(`/rooms/${code}/vote`);
+      if (r.status === 'revealed') navigate(`/rooms/${code}/reveal`);
+    },
+    [code, navigate]
+  );
 
   // Initial HTTP fetch
   useEffect(() => {
-    getRoom(code).then((res) => applySnapshot(res.data.data)).catch((e) => setError(e.message));
+    getRoom(code)
+      .then((res) => applySnapshot(res.data.data))
+      .catch((e) => setError(e.message));
   }, [code, applySnapshot]);
 
   // Socket events
   useSocket(code, {
-    'state-snapshot':       applySnapshot,
-    'member-joined':        () => getRoom(code).then((r) => setRoom(r.data.data)),
-    'member-left':          () => getRoom(code).then((r) => setRoom(r.data.data)),
-    'preferences-submitted': ({ readyCount, totalCount }) =>
-      setRoom((prev) => prev ? { ...prev, _readyCount: readyCount, _totalCount: totalCount } : prev),
-    'voting-started':       (r) => { setRoom(r); navigate(`/rooms/${code}/vote`); },
+    'state-snapshot': applySnapshot,
+    'member-joined': () => getRoom(code).then((r) => setRoom(r.data.data)),
+    'member-left': () => getRoom(code).then((r) => setRoom(r.data.data)),
+    'preferences-submitted': ({ readyCount, totalCount }) => {
+      setRoom((prev) =>
+        prev ? { ...prev, _readyCount: readyCount, _totalCount: totalCount } : prev
+      );
+      // The event carries only counts. Refresh the members too so each person's "Ready" badge
+      // matches the number above it (the fresh room replaces the counts with the same values).
+      getRoom(code)
+        .then((r) => setRoom(r.data.data))
+        .catch(() => {});
+    },
+    'voting-started': (r) => {
+      setRoom(r);
+      navigate(`/rooms/${code}/vote`);
+    },
   });
 
   const handleStartVoting = async () => {
-    try { await startVoting(code); navigate(`/rooms/${code}/vote`); }
-    catch (e) { setError(e.message); }
+    setStarting(true);
+    try {
+      await startVoting(code);
+      navigate(`/rooms/${code}/vote`);
+    } catch (e) {
+      setError(e.message);
+      setStarting(false);
+    }
   };
 
   const inviteLink = `${window.location.origin}/rooms/join?code=${code}`;
-  const copyLink = () => {
-    navigator.clipboard.writeText(inviteLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast('Couldn’t copy automatically — share the code instead.', 'error');
+    }
   };
 
-  if (!room) return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
-      {error || 'Loading…'}
-    </div>
-  );
+  if (!room)
+    return (
+      <PageShell footer={false}>
+        {error ? (
+          <ErrorState title="Couldn’t open this room" message={error}>
+            <Button onClick={() => navigate('/')}>Back to home</Button>
+          </ErrorState>
+        ) : (
+          <div className="grid min-h-[60dvh] place-items-center">
+            <Spinner inline label="Loading room…" />
+          </div>
+        )}
+      </PageShell>
+    );
 
   const hostId = room.host?._id ?? room.host;
   const isHost = hostId?.toString() === user?._id?.toString();
-  const readyCount  = room._readyCount  ?? room.members.filter((m) => m.preferencesSubmitted).length;
-  const totalCount  = room._totalCount  ?? room.members.length;
+  const readyCount = room._readyCount ?? room.members.filter((m) => m.preferencesSubmitted).length;
+  const totalCount = room._totalCount ?? room.members.length;
+  const readyPct = totalCount ? Math.round((readyCount / totalCount) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center py-16 px-4">
-      <div className="bg-gray-900 rounded-2xl p-8 w-full max-w-md space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">🎬 Room Lobby</h1>
-          <p className="text-gray-400 text-sm mt-1">
-            Mode: <span className="capitalize text-indigo-400">{room.mode}</span>
-          </p>
-        </div>
+    <PageShell footer={false}>
+      <div className="page-container py-8 lg:py-12">
+        <RoomHeader code={room.code} mode={room.mode} step="lobby" />
+        <h1 className="mt-8 text-4xl font-black leading-none text-white sm:text-5xl">Room lobby</h1>
 
-        {/* Invite code */}
-        <div className="bg-gray-800 rounded-xl p-4 text-center space-y-2">
-          <p className="text-xs text-gray-400 uppercase tracking-widest">Invite Code</p>
-          <p className="text-4xl font-mono font-bold tracking-widest text-indigo-400">{room.code}</p>
-          <button onClick={copyLink} className="text-xs text-gray-400 hover:text-white transition">
-            {copied ? '✓ Copied!' : 'Copy invite link'}
-          </button>
-        </div>
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start">
+          <div className="space-y-6">
+            {/* The invite: a ticket. The drop-shadow is on the wrapper — the ticket's mask would clip it. */}
+            <div className="drop-shadow-[0_18px_24px_rgba(8,1,4,0.55)]">
+              <div className="ticket bg-gray-900">
+                <div className="px-6 pb-6 pt-7 text-center">
+                  <p className="text-sm font-medium text-gray-400">Invite code</p>
+                  <p
+                    className="mt-2 font-mono text-5xl font-bold tracking-[0.25em] text-brass-300 sm:text-6xl"
+                    aria-label={`Invite code ${room.code.split('').join(' ')}`}
+                  >
+                    {room.code}
+                  </p>
+                </div>
+                <div className="perforation-t" aria-hidden="true" />
+                <div className="p-4">
+                  <Button variant="secondary" className="w-full" onClick={copyLink}>
+                    {copied ? '✓ Copied!' : 'Copy invite link'}
+                  </Button>
+                </div>
+              </div>
+            </div>
 
-        {/* Ready indicator */}
-        <p className="text-center text-sm text-gray-400">
-          {readyCount}/{totalCount} members ready
-        </p>
+            {error && (
+              <p
+                role="alert"
+                className="rounded-lg bg-red-500/10 px-4 py-3 text-center text-sm text-red-300 ring-1 ring-inset ring-red-400/30"
+              >
+                {error}
+              </p>
+            )}
 
-        {/* Members */}
-        <ul className="space-y-2">
-          {room.members.map((m) => {
-            const memberId = m.user?._id ?? m.user;
-            const isThisHost = memberId?.toString() === hostId?.toString();
-            return (
-              <li key={m._id} className="flex items-center gap-3 bg-gray-800 rounded-lg px-4 py-2">
-                <span className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">
-                  {(m.user?.name || '?')[0].toUpperCase()}
-                </span>
-                <span className="flex-1">{m.user?.name || 'Unknown'}</span>
-                {m.preferencesSubmitted && <span className="text-green-400 text-xs">✓ ready</span>}
-                {isThisHost && <span className="text-yellow-400 text-xs ml-1">host</span>}
-              </li>
-            );
-          })}
-        </ul>
+            <div className="space-y-3">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full"
+                onClick={() => navigate(`/rooms/${code}/preferences`)}
+              >
+                Set My Preferences
+              </Button>
+              {isHost ? (
+                <Button size="lg" className="w-full" onClick={handleStartVoting} loading={starting}>
+                  Start Voting →
+                </Button>
+              ) : (
+                <p className="text-center text-sm text-gray-400">
+                  Waiting for the host to start voting…
+                </p>
+              )}
+              <Button variant="ghost" className="w-full" onClick={() => navigate('/')}>
+                ← Leave Room
+              </Button>
+            </div>
+          </div>
 
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
-        <div className="space-y-2">
-          <button
-            onClick={() => navigate(`/rooms/${code}/preferences`)}
-            className="w-full bg-gray-700 hover:bg-gray-600 rounded-lg py-2 font-medium transition"
-          >
-            Set My Preferences
-          </button>
-          {isHost && (
-            <button
-              onClick={handleStartVoting}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 rounded-lg py-2 font-semibold transition"
+          <Surface as="section" variant="raised" aria-labelledby="members-heading">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="members-heading" className="text-2xl font-black text-white">
+                Members
+              </h2>
+              <p className="text-sm text-gray-300" aria-live="polite">
+                <span className="font-semibold text-white">{readyCount}</span> of {totalCount}{' '}
+                members ready
+              </p>
+            </div>
+            <div
+              role="progressbar"
+              aria-label="Members ready"
+              aria-valuemin={0}
+              aria-valuemax={totalCount}
+              aria-valuenow={readyCount}
+              className="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-800"
             >
-              Start Voting →
-            </button>
-          )}
-          <button
-            onClick={() => navigate('/')}
-            className="w-full bg-gray-800 hover:bg-gray-700 rounded-lg py-2 text-sm text-gray-400 hover:text-white transition"
-          >
-            ← Leave Room
-          </button>
+              <div
+                className="h-full rounded-full bg-curtain-500 transition-[width] duration-500 ease-cinema"
+                style={{ width: `${readyPct}%` }}
+              />
+            </div>
+
+            <ul className="mt-6 space-y-2">
+              {room.members.map((m) => {
+                const memberId = m.user?._id ?? m.user;
+                const isThisHost = memberId?.toString() === hostId?.toString();
+                return (
+                  <li
+                    key={m._id}
+                    className="flex items-center gap-3 rounded-xl bg-gray-800/60 px-4 py-3 ring-1 ring-inset ring-white/[0.05]"
+                  >
+                    <Avatar name={m.user?.name} />
+                    <span className="min-w-0 flex-1 truncate font-medium text-white">
+                      {m.user?.name || 'Unknown'}
+                    </span>
+                    {isThisHost && <Badge tone="brass">Host</Badge>}
+                    {m.preferencesSubmitted && <Badge tone="success">✓ Ready</Badge>}
+                  </li>
+                );
+              })}
+            </ul>
+          </Surface>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

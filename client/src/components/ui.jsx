@@ -1,23 +1,82 @@
+import Button from './Button';
+import Navbar from './Navbar';
+import Footer from './Footer';
+
 // ── Spinner ───────────────────────────────────────────────────────────────────
-export function Spinner({ label = 'Loading…' }) {
-  return (
+// Full-screen by default (route-level loading). `inline` renders just the ring.
+export function Spinner({ label = 'Loading…', inline = false }) {
+  const ring = (
     <div
       role="status"
       aria-label={label}
-      className="flex items-center justify-center min-h-screen bg-gray-950"
-    >
-      <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      className="size-10 animate-spin rounded-full border-[3px] border-brass-400 border-t-transparent"
+    />
+  );
+  if (inline) return ring;
+  return <div className="flex min-h-dvh items-center justify-center bg-gray-950">{ring}</div>;
+}
+
+// ── EmptyState ────────────────────────────────────────────────────────────────
+// `icon` accepts a node (an SVG) or a string; omit it for the default film-frame glyph.
+const FilmGlyph = (
+  <svg
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    className="size-12 text-brass-400/70"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.25"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4" />
+  </svg>
+);
+
+// `action` is an optional node (a Button / Link) shown under the text.
+export function EmptyState({ icon = FilmGlyph, title, body, action }) {
+  return (
+    <div className="flex flex-col items-center justify-center px-4 py-20 text-center">
+      <span className="mb-4 text-5xl" aria-hidden="true">
+        {icon}
+      </span>
+      <p className="font-display text-xl font-bold text-white">{title}</p>
+      {body && <p className="mt-2 max-w-sm text-sm leading-relaxed text-gray-400">{body}</p>}
+      {action && <div className="mt-6">{action}</div>}
     </div>
   );
 }
 
-// ── EmptyState ────────────────────────────────────────────────────────────────
-export function EmptyState({ icon = '🎬', title, body }) {
+// A failed request: says what happened and offers a retry (`onRetry`) plus any extra actions.
+export function ErrorState({ title = 'Something went wrong', message, onRetry, children }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-      <span className="text-5xl mb-4" aria-hidden="true">{icon}</span>
-      <p className="text-white font-semibold text-lg">{title}</p>
-      {body && <p className="text-gray-400 text-sm mt-1 max-w-xs">{body}</p>}
+    <div role="alert" className="flex flex-col items-center px-4 py-20 text-center">
+      <span className="grid size-12 place-items-center rounded-full bg-red-500/10 text-red-400 ring-1 ring-red-400/30">
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          className="size-6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <path d="M12 7v6M12 17h.01" />
+        </svg>
+      </span>
+      <p className="mt-4 font-display text-xl font-bold text-white">{title}</p>
+      {message && <p className="mt-2 max-w-sm text-sm leading-relaxed text-gray-400">{message}</p>}
+      {(onRetry || children) && (
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {onRetry && (
+            <Button variant="secondary" onClick={onRetry}>
+              Try again
+            </Button>
+          )}
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -26,72 +85,28 @@ export function EmptyState({ icon = '🎬', title, body }) {
 export function ErrorMessage({ message }) {
   if (!message) return null;
   return (
-    <p role="alert" className="text-red-400 text-sm text-center">
+    <p role="alert" className="text-center text-sm text-red-400">
       {message}
     </p>
   );
 }
 
 // ── PageShell ─────────────────────────────────────────────────────────────────
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-
-export function PageShell({ children, back }) {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
+// Navbar + main + footer. `back` adds a back arrow; `footer={false}` for immersive screens.
+export function PageShell({ children, back = false, footer = true }) {
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <nav className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-800">
-        <div className="flex items-center gap-3">
-          {back && (
-            <button
-              onClick={() => navigate(-1)}
-              aria-label="Go back"
-              className="text-gray-400 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
-            >
-              ←
-            </button>
-          )}
-          <Link to="/" className="text-lg font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded">
-            🎬 Movie Mystery
-          </Link>
-        </div>
-        <div className="flex items-center gap-3 text-sm">
-          {user ? (
-            <>
-              <Link to="/rooms/create" className="hidden sm:inline bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
-                Create Room
-              </Link>
-              <Link to="/rooms/join" className="text-gray-300 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded">
-                Join
-              </Link>
-              <Link to="/rooms/history" className="text-gray-300 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded">
-                History
-              </Link>
-              <Link to="/profile" className="text-gray-300 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded">
-                Profile
-              </Link>
-              <button
-                onClick={logout}
-                className="text-gray-400 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded"
-              >
-                Log out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="text-gray-300 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded">
-                Log in
-              </Link>
-              <Link to="/register" className="bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
-                Register
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
-      <main>{children}</main>
+    <div className="flex min-h-dvh flex-col bg-gray-950 text-white">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-70 focus:rounded-lg focus:bg-curtain-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+      >
+        Skip to content
+      </a>
+      <Navbar back={back} />
+      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+        {children}
+      </main>
+      {footer && <Footer />}
     </div>
   );
 }

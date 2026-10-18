@@ -2,10 +2,25 @@ const mongoose = require('mongoose');
 const Movie = require('../models/Movie');
 const ApiError = require('../utils/ApiError');
 const { expandPlatformNames } = require('../utils/platforms');
+const { cached } = require('../utils/ramCache');
 
 const SORT_FIELDS = { rating: 'rating', popularity: 'popularity', year: 'releaseYear', runtime: 'runtime' };
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
+
+// Cache TTLs
+const LIST_CACHE_TTL    = 2 * 60 * 1000;   // 2 minutes for list/search results
+const DETAIL_CACHE_TTL  = 10 * 60 * 1000;  // 10 minutes for single movie detail
+const FILTER_META_TTL   = 60 * 60 * 1000;  // 1 hour for filter metadata
+
+/** Build a deterministic cache key from query params. */
+const listCacheKey = (raw) => {
+  const parts = Object.keys(raw)
+    .sort()
+    .map((k) => `${k}=${raw[k]}`)
+    .join('&');
+  return `movies-list:${parts}`;
+};
 
 /**
  * Build and execute the aggregation pipeline for GET /api/movies.
@@ -35,6 +50,12 @@ const MAX_LIMIT = 100;
  * 6. $project (root) — reshape the facet output into { data, total }.
  */
 const queryMovies = async (rawQuery) => {
+  const cacheKey = listCacheKey(rawQuery);
+  return cached(cacheKey, () => _queryMoviesFromDB(rawQuery), LIST_CACHE_TTL);
+};
+
+/** The actual aggregation (called on cache miss). */
+const _queryMoviesFromDB = async (rawQuery) => {
   const {
     q: rawQ, genre: rawGenre, language: rawLanguage, minRating, maxRuntime,
     yearFrom, yearTo, platform: rawPlatform, region: rawRegion,
@@ -162,50 +183,46 @@ const queryMovies = async (rawQuery) => {
 
 const getMovieById = async (id) => {
   if (!mongoose.isValidObjectId(id)) throw ApiError.notFound('Movie not found');
-  const movie = await Movie.findById(id).lean();
-  if (!movie) throw ApiError.notFound('Movie not found');
 
-  // Similar movies: share at least one genre, exclude self, top 6 by popularity
-  const similar = await Movie.find(
-    { genres: { $in: movie.genres }, _id: { $ne: movie._id } },
-    { tmdbId: 1, title: 1, posterPath: 1, rating: 1, releaseYear: 1, genres: 1 }
-  )
-    .sort({ popularity: -1 })
-    .limit(6)
-    .lean();
+  const cacheKey = `movie-detail:${id}`;
+  return cached(cacheKey, async () => {
+    const movie = await Movie.findById(id).lean();
+    if (!movie) throw ApiError.notFound('Movie not found');
 
-  return { movie, similar };
+    // Similar movies: share at least one genre, exclude self, top 6 by popularity
+    const similar = await Movie.find(
+      { genres: { $in: movie.genres }, _id: { $ne: movie._id } },
+      { tmdbId: 1, title: 1, posterPath: 1, rating: 1, releaseYear: 1, genres: 1 }
+    )
+      .sort({ popularity: -1 })
+      .limit(6)
+      .lean();
+
+    return { movie, similar };
+  }, DETAIL_CACHE_TTL);
 };
 
-let filterMetaCache = null;
-let filterMetaCacheTime = 0;
-const FILTER_META_TTL = 60 * 60 * 1000; // 1 hour
-
 const getFilterMeta = async () => {
-  if (filterMetaCache && Date.now() - filterMetaCacheTime < FILTER_META_TTL) {
-    return filterMetaCache;
-  }
+  return cached('filter-meta', async () => {
+    const [genres, languages, providerAgg] = await Promise.all([
+      Movie.distinct('genres'),
+      Movie.distinct('language'),
+      // Collect all provider names across all regions from the providers Map
+      Movie.aggregate([
+        { $project: { providerValues: { $objectToArray: '$providers' } } },
+        { $unwind: '$providerValues' },
+        { $unwind: '$providerValues.v' },
+        { $group: { _id: '$providerValues.v.name' } },
+        { $sort: { _id: 1 } },
+      ]),
+    ]);
 
-  const [genres, languages, providerAgg] = await Promise.all([
-    Movie.distinct('genres'),
-    Movie.distinct('language'),
-    // Collect all provider names across all regions from the providers Map
-    Movie.aggregate([
-      { $project: { providerValues: { $objectToArray: '$providers' } } },
-      { $unwind: '$providerValues' },
-      { $unwind: '$providerValues.v' },
-      { $group: { _id: '$providerValues.v.name' } },
-      { $sort: { _id: 1 } },
-    ]),
-  ]);
-
-  filterMetaCache = {
-    genres:    genres.filter(Boolean).sort(),
-    languages: languages.filter(Boolean).sort(),
-    platforms: providerAgg.map((p) => p._id).filter(Boolean),
-  };
-  filterMetaCacheTime = Date.now();
-  return filterMetaCache;
+    return {
+      genres:    genres.filter(Boolean).sort(),
+      languages: languages.filter(Boolean).sort(),
+      platforms: providerAgg.map((p) => p._id).filter(Boolean),
+    };
+  }, FILTER_META_TTL);
 };
 
 module.exports = { queryMovies, getMovieById, getFilterMeta };

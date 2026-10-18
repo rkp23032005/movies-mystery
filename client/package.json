@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "check:images": "node scripts/verify-images.mjs",
     "lint": "eslint src",
     "preview": "vite preview"
   },
