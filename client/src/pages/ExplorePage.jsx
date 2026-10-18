@@ -142,7 +142,6 @@ export default function ExplorePage() {
   };
 
   const hasFilters = activeFilters.length > 0;
-  const total = pagination.total;
 
   return (
     <PageShell>
@@ -208,20 +207,13 @@ export default function ExplorePage() {
         <section ref={resultsRef} className="min-w-0 scroll-mt-24" aria-busy={loading}>
           {/* Results toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-            <p className="text-sm text-gray-300" aria-live="polite">
-              {loading || error ? (
-                <span
-                  className="skeleton inline-block h-4 w-28 rounded align-middle"
-                  aria-hidden="true"
-                />
-              ) : (
-                <>
-                  <span className="font-semibold text-white">{total.toLocaleString()}</span> movie
-                  {total !== 1 ? 's' : ''}
-                  {currentFilters.q && <> for “{currentFilters.q}”</>}
-                </>
-              )}
-            </p>
+            {currentFilters.q ? (
+              <p className="text-sm text-gray-300" aria-live="polite">
+                Results for <span className="font-semibold text-white">“{currentFilters.q}”</span>
+              </p>
+            ) : (
+              <div />
+            )}
 
             <div className="flex items-center gap-2">
               <Button
@@ -358,9 +350,7 @@ export default function ExplorePage() {
               Clear
             </Button>
             <Button className="flex-1" onClick={closeDrawer}>
-              {loading
-                ? 'Show results'
-                : `Show ${total.toLocaleString()} movie${total !== 1 ? 's' : ''}`}
+              Show results
             </Button>
           </div>
         }
