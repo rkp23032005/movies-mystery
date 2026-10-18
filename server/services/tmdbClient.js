@@ -1,9 +1,13 @@
 const axios = require('axios');
 
+const token = process.env.TMDB_API_READ_ACCESS_TOKEN || process.env.TMDB_API_KEY;
+const isBearer = Boolean(token && token.length > 40);
+
 const tmdb = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
   timeout: 25000,
-  params: { api_key: process.env.TMDB_API_KEY, language: 'en-US' },
+  headers: isBearer ? { Authorization: `Bearer ${token}` } : {},
+  params: isBearer ? { language: 'en-US' } : { api_key: token, language: 'en-US' },
 });
 
 // Retry up to 3 times on 429 (rate-limit) or transient network errors/timeouts

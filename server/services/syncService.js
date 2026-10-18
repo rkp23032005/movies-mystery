@@ -248,4 +248,4 @@ const sync = async ({ pagesPerList = 5, withDetails = true } = {}) => {
   return total;
 };
 
-module.exports = { sync, syncDiscover, syncOneIfStale, mapDetailedMovie, mapListMovie, flattenProviders };
+module.exports = { sync, syncDiscover, syncOneIfStale, mapDetailedMovie, mapListMovie, flattenProviders, fetchDetail };

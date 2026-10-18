@@ -3,6 +3,8 @@ const Movie = require('../models/Movie');
 const ApiError = require('../utils/ApiError');
 const { expandPlatformNames } = require('../utils/platforms');
 const { cached } = require('../utils/ramCache');
+const tmdb = require('./tmdbClient');
+const { mapDetailedMovie, fetchDetail } = require('./syncService');
 
 const SORT_FIELDS = { rating: 'rating', popularity: 'popularity', year: 'releaseYear', runtime: 'runtime' };
 const DEFAULT_LIMIT = 20;
@@ -73,6 +75,69 @@ const _queryMoviesFromDB = async (rawQuery) => {
   const skip     = (pageNum - 1) * limitNum;
   const sortDir  = order === 'asc' ? 1 : -1;
   const sortKey  = SORT_FIELDS[sortBy] ?? 'popularity';
+
+  // ── Real-Time TMDB Search ──────────────────────────────────────────────────
+  // If the user searches by query, call TMDB live to give access to all TMDB movies!
+  if (q && q.trim()) {
+    try {
+      const tmdbRes = await tmdb.get('/search/movie', {
+        query: q.trim(),
+        page: pageNum,
+        include_adult: false,
+      });
+      const results = tmdbRes.results || [];
+      if (results.length > 0) {
+        // Upsert all found movies so they exist in MongoDB and have valid _ids
+        const ops = results.map((m) => ({
+          updateOne: {
+            filter: { tmdbId: m.id },
+            update: {
+              $setOnInsert: {
+                tmdbId:       m.id,
+                title:        m.title ?? m.original_title ?? '',
+                overview:     m.overview ?? '',
+                language:     m.original_language ?? 'en',
+                releaseYear:  m.release_date ? parseInt(m.release_date.slice(0, 4), 10) : null,
+                rating:       m.vote_average ?? 0,
+                popularity:   m.popularity ?? 0,
+                posterPath:   m.poster_path ?? '',
+                backdropPath: m.backdrop_path ?? '',
+                lastSyncedAt: new Date(),
+              },
+            },
+            upsert: true,
+          },
+        }));
+        await Movie.bulkWrite(ops, { ordered: false });
+
+        // Retrieve from MongoDB with _id and streaming providers
+        const docs = await Movie.find(
+          { tmdbId: { $in: results.map((r) => r.id) } },
+          {
+            tmdbId: 1, title: 1, posterPath: 1, backdropPath: 1,
+            genres: 1, language: 1, rating: 1, popularity: 1,
+            releaseYear: 1, runtime: 1, overview: 1,
+            [`providers.${region}`]: 1,
+          }
+        ).lean();
+
+        const docMap = new Map(docs.map((d) => [d.tmdbId, d]));
+        const ordered = results.map((r) => docMap.get(r.id)).filter(Boolean);
+
+        return {
+          data: ordered,
+          pagination: {
+            page: pageNum,
+            limit: limitNum,
+            total: tmdbRes.total_results,
+            totalPages: Math.min(tmdbRes.total_pages, 500),
+          },
+        };
+      }
+    } catch (err) {
+      console.warn('[searchLiveTmdb] falling back to database search:', err.message);
+    }
+  }
 
   // ── Stage 1: primary $match ───────────────────────────────────────────────
   const match = {};
@@ -182,11 +247,31 @@ const _queryMoviesFromDB = async (rawQuery) => {
 };
 
 const getMovieById = async (id) => {
-  if (!mongoose.isValidObjectId(id)) throw ApiError.notFound('Movie not found');
+  const isMongoId = mongoose.isValidObjectId(id);
+  const isNumeric = /^\d+$/.test(id);
+  if (!isMongoId && !isNumeric) throw ApiError.notFound('Movie not found');
 
   const cacheKey = `movie-detail:${id}`;
   return cached(cacheKey, async () => {
-    const movie = await Movie.findById(id).lean();
+    let movie = isMongoId
+      ? await Movie.findById(id).lean()
+      : await Movie.findOne({ tmdbId: Number(id) }).lean();
+
+    // If not found in DB yet and is numeric or TMDB key exists, fetch live from TMDB!
+    if (!movie && isNumeric) {
+      try {
+        const detail = await fetchDetail(Number(id));
+        const doc = mapDetailedMovie(detail);
+        movie = await Movie.findOneAndUpdate(
+          { tmdbId: Number(id) },
+          { $set: doc },
+          { upsert: true, new: true }
+        ).lean();
+      } catch (err) {
+        console.warn(`[getMovieById] live TMDB fetch failed for ${id}:`, err.message);
+      }
+    }
+
     if (!movie) throw ApiError.notFound('Movie not found');
 
     // Similar movies: share at least one genre, exclude self, top 6 by popularity
